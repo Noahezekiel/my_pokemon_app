@@ -1,17 +1,18 @@
-// src/App.js
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import DetailPage from './pages/DetailPage';
-import './App.css';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const DetailPage = lazy(() => import('./pages/DetailPage'));
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/pokemon/:name" element={<DetailPage />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/pokemon/:name" element={<DetailPage />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
