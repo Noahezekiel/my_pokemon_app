@@ -7,32 +7,32 @@ import './HomePage.css';
 
 const HomePage = () => {
   const [pokemons, setPokemons] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
   const observer = useRef();
 
-  // Load 20 Pokémon per batch
+  // Lazy load 20 Pokémon at a time
   const loadPokemons = async () => {
     try {
-      const { data } = await axios.get(
+      const res = await axios.get(
         `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`
       );
-      setPokemons(prev => [...prev, ...data.results]);
-      setHasMore(data.next !== null);
-    } catch (error) {
-      console.error('Failed to fetch Pokémon:', error);
+      setPokemons(prev => [...prev, ...res.data.results]);
+      setHasMore(res.data.next !== null);
+    } catch (err) {
+      console.error('Fetch error:', err);
     }
   };
 
   useEffect(() => {
-    loadPokemons();
-  }, [offset]);
+    if (!isSearching) loadPokemons();
+  }, [offset, isSearching]);
 
-  // Intersection observer to detect last card
+  // Intersection observer for lazy loading
   const lastPokemonRef = useCallback(
     node => {
-      if (!hasMore) return;
+      if (isSearching || !hasMore) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver(entries => {
@@ -43,25 +43,46 @@ const HomePage = () => {
 
       if (node) observer.current.observe(node);
     },
-    [hasMore]
+    [hasMore, isSearching]
   );
 
-  // Filtered or full list
-  const showFiltered = searchQuery.trim() !== '';
-  const displayedPokemons = showFiltered
-    ? pokemons.filter(pokemon =>
-        pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : pokemons;
+  // Search Pokémon by name
+  const handleSearch = async (query) => {
+    if (query.trim() === '') {
+      // Reset to lazy loaded state
+      setPokemons([]);
+      setOffset(0);
+      setHasMore(true);
+      setIsSearching(false);
+      return;
+    }
+
+    try {
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`);
+      setPokemons([
+        {
+          name: res.data.name,
+          url: `https://pokeapi.co/api/v2/pokemon/${res.data.id}/`,
+        },
+      ]);
+      setHasMore(false);
+      setIsSearching(true);
+    } catch (err) {
+      setPokemons([]);
+      setHasMore(false);
+      setIsSearching(true);
+      console.error('Not found:', err);
+    }
+  };
 
   return (
     <div className="home-page">
-      <SearchBar setSearchQuery={setSearchQuery} />
+      <SearchBar setSearchQuery={handleSearch} />
       <PokemonList
-        pokemons={displayedPokemons}
-        lastPokemonRef={showFiltered ? null : lastPokemonRef}
+        pokemons={pokemons}
+        lastPokemonRef={!isSearching ? lastPokemonRef : null}
       />
-      {!showFiltered && hasMore && (
+      {!isSearching && hasMore && (
         <p style={{ textAlign: 'center', marginTop: '1rem' }}>Loading more Pokémon...</p>
       )}
     </div>
