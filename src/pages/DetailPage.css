@@ -1,9 +1,111 @@
+/* DetailPage.css */
 .detail-page {
-  text-align: center;
-  padding: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+  color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.detail-page img {
-  width: 200px;
-  height: 200px;
+.detail-header {
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.pokemon-name {
+  font-size: 2rem;
+  margin-top: 1rem;
+}
+
+.pokemon-id {
+  opacity: 0.7;
+  font-size: 1rem;
+}
+
+.detail-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin: 1rem auto;
+}
+
+.types {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.type {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* Example Type Backgrounds */
+.fire-bg { background-color: #f08030; }
+.grass-bg { background-color: #78c850; }
+.water-bg { background-color: #6890f0; }
+.electric-bg { background-color: #f8d030; }
+.bug-bg { background-color: #a8b820; }
+.normal-bg { background-color: #a8a878; }
+.fairy-bg { background-color: #fdb9e9; }
+
+.detail-info {
+  background-color: white;
+  color: black;
+  padding: 2rem;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  margin-top: -2rem;
+}
+
+.stats-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.stat-name {
+  width: 100px;
+  text-transform: capitalize;
+}
+
+.stat-bar {
+  flex: 1;
+  background-color: #eee;
+  height: 10px;
+  margin: 0 10px;
+  border-radius: 5px;
+}
+
+.stat-fill {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 5px;
+}
+
+.stat-value {
+  width: 30px;
+  text-align: right;
+}
+
+.extra-info {
+  margin-top: 1.5rem;
 }
