@@ -1,14 +1,9 @@
-.detail-container {
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .detail-container img {
-    width: 150px;
-  }
-  
-  .detail-container p {
-    font-size: 1.1rem;
-    margin: 0.5rem 0;
-  }
-  
+.detail-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.detail-page img {
+  width: 200px;
+  height: 200px;
+}

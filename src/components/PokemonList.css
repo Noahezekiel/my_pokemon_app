@@ -1,0 +1,19 @@
+/* PokemonList.css */
+
+.pokemon-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 10px;
+    margin-top: 15px;
+}
+  
+.pokemon-list h1 {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 2rem;
+    color: #ff1c1c;
+    margin-bottom: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+

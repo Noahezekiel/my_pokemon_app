@@ -1,74 +1,34 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PokemonCard from '../components/PokemonCard';
+import PokemonList from '../components/PokemonList';
 import SearchBar from '../components/SearchBar';
-import ErrorMessage from '../components/ErrorMessage';
 import './HomePage.css';
 
 const HomePage = () => {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [nextUrl, setNextUrl] = useState('https://pokeapi.co/api/v2/pokemon?limit=20');
-  const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const observerRef = useRef();
-
-  const loadPokemon = useCallback(async () => {
-    if (!nextUrl) return;
-    try {
-      const response = await axios.get(nextUrl);
-      setNextUrl(response.data.next);
-
-      const pokemonDetails = await Promise.all(
-        response.data.results.map(p => axios.get(p.url).then(res => res.data))
-      );
-
-      setPokemonList(prev => {
-        // Avoid duplicates
-        const newPokemon = pokemonDetails.filter(
-          newP => !prev.some(existing => existing.name === newP.name)
-        );
-        return [...prev, ...newPokemon];
-      });
-    } catch (err) {
-      setError('Failed to fetch Pokémon. Check your connection.');
-    }
-  }, [nextUrl]);
+  const [pokemons, setPokemons] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    loadPokemon();
-  }, [loadPokemon]);
+    const fetchPokemons = async () => {
+      try {
+        const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=150');
+        setPokemons(data.results);
+      } catch (error) {
+        console.error('Failed to fetch Pokémon data:', error);
+      }
+    };
 
-  // Intersection Observer for lazy loading
-  const loaderRef = useCallback(
-    (node) => {
-      if (observerRef.current) observerRef.current.disconnect();
+    fetchPokemons();
+  }, []);
 
-      observerRef.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          loadPokemon();
-        }
-      });
-
-      if (node) observerRef.current.observe(node);
-    },
-    [loadPokemon]
-  );
-
-  const filteredList = pokemonList.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPokemons = pokemons.filter(pokemon =>
+    pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="home-container">
-      <h1>Pokémon List</h1>
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      {error && <ErrorMessage message={error} />}
-      <div className="pokemon-grid">
-        {filteredList.map(pokemon => (
-          <PokemonCard key={pokemon.name} pokemon={pokemon} />
-        ))}
-      </div>
-      <div ref={loaderRef} className="load-more-trigger" />
+    <div className="home-page">
+      <SearchBar setSearchQuery={setSearchQuery} />
+      <PokemonList pokemons={filteredPokemons} />
     </div>
   );
 };

@@ -1,14 +1,27 @@
+// PokemonCard.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './PokemonCard.css';
 
-const PokemonCard = ({ pokemon }) => {
-  const navigate = useNavigate();
+const PokemonCard = ({ pokemon, index }) => {
+  const cardColors = [
+    'grass-card', 'fire-card', 'water-card', 'electric-card',
+    'bug-card', 'normal-card', 'poison-card', 'ground-card',
+    'fairy-card', 'psychic-card'
+  ];
+
+  const groupIndex = Math.floor(index / 3); // group every 3 cards
+  const cardColor = cardColors[groupIndex % cardColors.length];
 
   return (
-    <div className="pokemon-card" onClick={() => navigate(`/pokemon/${pokemon.name}`)}>
-      <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-      <h3>{pokemon.name}</h3>
+    <div className={`pokemon-card ${cardColor}`}>
+      <Link to={`/pokemon/${pokemon.name}`}>
+        <h3>{pokemon.name}</h3>
+        <img
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.url.split('/')[6]}.png`}
+          alt={pokemon.name}
+        />
+      </Link>
     </div>
   );
 };

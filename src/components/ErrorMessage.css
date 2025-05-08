@@ -1,6 +1,8 @@
 .error-message {
-    color: red;
-    margin-top: 1rem;
-    font-weight: bold;
-  }
-  
+  color: white;
+  background-color: #e74c3c;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+  text-align: center;
+}
