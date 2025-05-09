@@ -29,7 +29,7 @@ npm start
 ## Usage
 To start the application locally: npm start
 Then, open your browser and visit: http://localhost:3000
-
+or https://dev.dc9nynn4ap6i4.amplifyapp.com
 
 ### The Core Team
 Noah Ezekiel
