@@ -1,8 +1,15 @@
 /* DetailPage.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
 .detail-page {
   font-family: 'Helvetica Neue', sans-serif;
   color: #fff;
-  border-radius: 20px;
+  border-radius: 50px;
   overflow: hidden;
 }
 
